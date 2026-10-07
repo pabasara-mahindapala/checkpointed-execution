@@ -1,0 +1,16 @@
+{
+  "name": "checkpointed-execution",
+  "description": "Reviewed, step-by-step execution for coding agents: stop, verify, confirm.",
+  "owner": {
+    "name": "Pabasara Mahindapala",
+    "url": "https://github.com/pabasara-mahindapala"
+  },
+  "plugins": [
+    {
+      "name": "checkpointed-execution",
+      "source": "./",
+      "description": "Reviewed, confirm-before-next-step execution for coding agents.",
+      "category": "productivity"
+    }
+  ]
+}
