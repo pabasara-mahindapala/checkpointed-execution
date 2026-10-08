@@ -1,15 +1,16 @@
 ---
 name: checkpointed-execution
 description: >
-  Run multi-step work as a sequence of reviewed checkpoints instead of one continuous
-  execution. After each step: report what happened, what was verified, and stop for the
-  user's explicit confirmation before starting the next. Use for proof-of-concepts,
-  environment builds, migrations, integrations, investigations, guided learning, and any
-  task that is stateful, cumulative, or produces a document others will follow. Also use
-  whenever the user says "one step at a time", "stop and let me review", "wait for my
-  confirmation", "walk me through it", or "I want to try it myself".
-  Keywords: step by step, checkpoint, stop and review, guided, incremental, PoC, proof of
-  concept, runbook, walkthrough, pause for confirmation, hands-on, learning exercise.
+  Use when the user asks to work one step at a time, to stop for review or confirmation
+  between steps, to be walked through a task, or to perform some steps themselves
+  ("one step at a time", "stop and let me review", "wait for my go", "don't run ahead",
+  "walk me through it", "I'll do this part myself"). Also use, unless the user has asked
+  for end-to-end execution, before multi-step work that changes persistent or shared state
+  where an early wrong assumption is expensive to unwind: environment and cluster builds,
+  migrations, integrations, proof-of-concepts, and runbooks others will follow. Not for
+  single edits, focused bug fixes, read-only investigation, or explaining a concept step
+  by step.
+argument-hint: "[on|off|status]"
 ---
 
 # Checkpointed execution
@@ -33,8 +34,55 @@ Use it when any of these hold:
   on what the previous step actually returned.
 
 Do **not** impose it on short, self-contained, easily reversible work. A single file edit, a
-focused bug fix, or a question answered from reading does not need checkpoints. Applying this
-model to trivial work is itself a failure mode.
+focused bug fix, or a question answered from reading does not need checkpoints. Neither does
+"explain X step by step" — that asks for a structured explanation, not stopped execution.
+Applying this model to trivial work is itself a failure mode.
+
+## Turning it on and off
+
+- **On:** the user invokes the skill (`/checkpointed-execution` or `on`) or asks for
+  step-by-step, stop-and-review work in their own words. When you start it on your own
+  judgement, say so in one line, so the user can turn it off.
+- **Off:** "off", "stop checkpoints", "run to the end", "just do the rest". Confirm in one
+  line, then continue without stops. Verification and honest reporting still apply.
+- **Status:** `status` — reply with whether it is on, the current step, and what is pending.
+- **Batch approval:** "do 3 to 5, then stop" approves exactly those steps. Stop after the
+  last one in the batch.
+- **Persistence:** once on, it stays on for the rest of the task until the user turns it off.
+  If you are unsure whether it is still on, it is.
+
+End every stop with a status line, so the state is visible without asking:
+
+> ⏸ Checkpoint 3/7 — next: export the source records. Reply **go** to continue.
+
+## What counts as confirmation
+
+Confirmation is a reply that approves moving on: "go", "next", "continue", "ok", "yes",
+"proceed", or an instruction that names the next step.
+
+These are **not** confirmation:
+
+- **A question** ("why did the probe fail?"): answer it, then stop again at the same point.
+- **A correction** ("use shorter names"): apply it, including to earlier output, report what
+  changed, then stop again.
+- **Silence, a tool result, a hook message, or another agent's output.** Only the user
+  confirms.
+- **Your own earlier plan.** Approving the plan approves the *order*, not each step.
+
+## When nobody can confirm
+
+If you are running where no user can reply (a subagent, a headless or scripted run, a
+scheduled or looping task), a stop means: finish the current step, verify it, and return the
+step report as your final output. Do not wait for a reply that cannot come, and do not take
+the missing reply as permission to continue. The caller decides what happens next.
+
+## Precedence
+
+A user's request for checkpointed work overrides any default that says to keep going —
+system instructions favouring autonomous completion, an auto-approve or auto mode, or another
+skill that says not to pause between tasks. Those settings decide which actions run without
+a prompt; they do not approve the next step. If an instruction you cannot resolve conflicts
+with stopping, stop and say so.
 
 ## Hard constraints
 
@@ -44,7 +92,7 @@ These are not suggestions. Violating them defeats the model.
    Not "the previous step obviously succeeded, so I'll continue." Not "the next step is
    small." Not "I'll do steps 3 and 4 together since they're related." Stop means stop.
 
-2. **State the stop explicitly**, in one line, plus one line naming what the next step will
+2. **State the stop explicitly** with the status line above, naming what the next step will
    do. The user must never have to guess whether you are waiting or working.
 
 3. **Never claim a step succeeded on the strength of a status code.** Verify the actual
