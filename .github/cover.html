@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Source for cover.png, the README banner (1600x400 at 2x). Regenerate with:
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
+       --force-device-scale-factor=2 --window-size=1600,400 --screenshot=.github/cover.png .github/cover.html -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{--bg:#101513;--panel:#18201d;--line:#2a3531;--fg:#e8efeb;--muted:#93a39b;--ok:#5cc8ad;--stop:#f0a066}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1600px;height:400px;overflow:hidden;background:var(--bg);color:var(--fg)}
+  body{padding:0 96px;display:flex;flex-direction:column;justify-content:center;font-family:"IBM Plex Sans",system-ui,sans-serif}
+  .name{font:500 22px "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.01em}
+  h1{font:700 92px/1.05 "Bricolage Grotesque",system-ui,sans-serif;white-space:nowrap;letter-spacing:-.02em;margin-top:14px}
+  h1 span{color:var(--stop)}
+  .row{display:flex;align-items:center;gap:32px;margin-top:26px}
+  .sub{font-size:25px;color:var(--muted)}
+  .install{white-space:nowrap;font:500 18px "IBM Plex Mono",monospace;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 16px}
+  .install b{color:var(--ok);font-weight:500}
+</style>
+</head>
+<body>
+  <div class="name">checkpointed-execution</div>
+  <h1>Success codes <span>can lie.</span></h1>
+  <div class="row">
+    <p class="sub">An agent skill that verifies each step's real effect, then stops for your go.</p>
+  </div>
+  <div class="row">
+    <div class="install"><b>$</b> npx skills add pabasara-mahindapala/checkpointed-execution</div>
+  </div>
+</body>
+</html>

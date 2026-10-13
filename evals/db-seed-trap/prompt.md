@@ -1,5 +1,5 @@
 ---
-description: A real SQLite migration exits 0 but changes nothing (INSERT OR IGNORE on an existing row); the agent must catch it by read-back and stop
+description: A real SQLite migration exits 0 but updates no rows (the stored email has different capitalisation); the agent must catch it by checking the data and stop
 tags: [behaviour, scaffold]
 runs: 3
 max_turns: 15

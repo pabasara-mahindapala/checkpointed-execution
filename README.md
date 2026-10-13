@@ -1,18 +1,46 @@
 # checkpointed-execution
 
-**200 OK is not done.**
+![checkpointed-execution: Success codes can lie. An agent skill that verifies each step's real effect, then stops for your go.](.github/cover.png)
 
-An agent skill that makes your coding agent work in reviewed checkpoints. After each step it
-shows you evidence that the step actually worked, not just that a command returned success,
-then stops and waits for your go.
+**Success codes can lie.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-6b4fbb.svg)](https://agentskills.io/specification)
 [![npx skills](https://img.shields.io/badge/install-npx%20skills-black.svg)](https://skills.sh)
 
-![A toy user service: create returns 201 Created, but get returns 404 Not Found.](demo/service.gif)
+An agent skill that makes your coding agent work in reviewed checkpoints. After each step it
+shows you evidence that the step actually worked, not just that a command returned success,
+then stops and waits for your go.
 
-A toy user service: `create` returns `201 Created`, but `get` returns `404 Not Found`. It never actually stored the user.
+## Install
+
+```sh
+npx skills add pabasara-mahindapala/checkpointed-execution -g
+```
+
+<details>
+<summary>Other install methods</summary>
+
+**Claude Code plugin**
+
+```sh
+claude plugin marketplace add pabasara-mahindapala/checkpointed-execution
+claude plugin install checkpointed-execution@checkpointed-execution
+```
+
+**Manual**
+
+```sh
+cp -r skills/checkpointed-execution ~/.claude/skills/   # or ~/.agents/skills/
+```
+
+</details>
+
+## The problem it solves
+
+A user service. Its `create` command prints `201 Created` and exits 0, but never stores
+anything. You ask the agent to create alice, give her the admin role, then create bob,
+one step at a time.
 
 <table>
   <tr>
@@ -20,12 +48,6 @@ A toy user service: `create` returns `201 Created`, but `get` returns `404 Not F
     <td width="50%"><img src="demo/with.gif" alt="Agent with checkpointed-execution finds in preflight that create stores nothing, runs no steps, and stops at Checkpoint 0/3."></td>
   </tr>
 </table>
-
-## The problem, in one run
-
-A user service. Its `create` command prints `201 Created` and exits 0, but never stores
-anything. You ask the agent to create alice, give her the admin role, then create bob,
-one step at a time.
 
 **Without the skill**, the agent's final message:
 
@@ -56,33 +78,9 @@ one step at a time.
 > ⏸ Checkpoint 0/3 · standard. Next: Step 1 `[ME]`, `./bin/usersvc create alice`, then check
 > with `get alice` and `list`. Reply **go** for that, or pick option 2 or 3.
 
-Both are real messages from the [`status-code-trap`](evals/status-code-trap) eval case.
+Both are real messages from the [`status-code-trap`](evals/status-code-trap) eval case (see Evaluation below).
 The agent without the skill wasn't careless; it trusted the status code. That's the default,
 and this skill replaces it.
-
-## Install
-
-```sh
-npx skills add pabasara-mahindapala/checkpointed-execution -g
-```
-
-<details>
-<summary>Other install methods</summary>
-
-**Claude Code plugin**
-
-```sh
-claude plugin marketplace add pabasara-mahindapala/checkpointed-execution
-claude plugin install checkpointed-execution@checkpointed-execution
-```
-
-**Manual**
-
-```sh
-cp -r skills/checkpointed-execution ~/.claude/skills/   # or ~/.agents/skills/
-```
-
-</details>
 
 ## What it does
 
@@ -127,26 +125,6 @@ to end. Checkpoints cost you a round trip per step. They're worth it when steps 
 other's state, when a system can report success while doing nothing, or when you want to
 learn the system yourself.
 
-## Evidence
-
-This skill ships with an eval suite for [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals):
-16 cases that check when it triggers and how it behaves (stopping, "go" running one step, a
-question not counting as a go, turning it off, running with no human to confirm, and the
-status-code trap). Each case runs with and without the skill.
-
-Results on Claude Code's default model:
-
-| Case | With skill | Without |
-|---|---|---|
-| `status-code-trap` | 1.00 | 0.33 |
-| `trigger-pos-one-step-at-a-time` (skill fires) | 1.00 | 0.00 |
-| `trigger-neg-quick-question` (skill stays quiet) | 1.00 | 1.00 |
-| `stops-after-first-step` | 1.00 | 0.75 |
-
-When asked politely, the agent without the skill often stops on its own too. 
-The bigger difference is in what it checks before it says "done". 
-See [`evals/README.md`](evals/README.md) to run the suite yourself.
-
 ## FAQ
 
 **Isn't this just "be careful" in a prompt?**
@@ -172,6 +150,31 @@ skills/checkpointed-execution/
 evals/                          # claude plugin eval cases
 .claude-plugin/                 # Claude Code plugin and marketplace manifests
 ```
+
+## Evaluation
+
+This skill ships with an eval suite for [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals):
+17 cases that check when it triggers and how it behaves (stopping, "go" running one step, a
+question not counting as a go, turning it off, running with no human to confirm, a 201 that
+stored nothing, and a migration that updated no rows). Each case runs with and without the
+skill.
+
+Full suite, 2026-10-13, Claude Code's default model, 102 runs:
+
+| Case | With skill | Without |
+|---|---|---|
+| `status-code-trap` | 0.89 | 0.33 |
+| `headless-returns-report` | 1.00 | 0.00 |
+| `stops-after-first-step` | 1.00 | 0.75 |
+| `db-seed-trap`, `go-runs-one-step`, `question-is-not-confirmation`, `off-runs-to-end` | 1.00 | 1.00 |
+| Triggering: fires when it should | 10 of 10 runs | |
+| Triggering: stays quiet when it should | 10 of 10 runs | |
+
+When you ask for one step at a time, the agent without the skill usually stops on its own
+too. The bigger difference is in what it checks before it says "done": without the skill it
+trusted the `201 Created` in every run. [`evals/RESULTS.md`](evals/RESULTS.md) has the
+details and known issues, and [`evals/README.md`](evals/README.md) shows how to run the
+suite yourself.
 
 ## License
 

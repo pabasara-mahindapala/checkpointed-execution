@@ -32,6 +32,9 @@ confirmation rules? These write files and run commands in a sandboxed workspace.
 | `off-runs-to-end` | "Turn checkpoints off" lets it finish all steps |
 | `headless-returns-report` | With no human to reply, it returns a step report instead of running on |
 | `status-code-trap` | A create call returns `201 Created` but stores nothing; the agent must catch it |
+| `db-seed-trap` | A real SQLite migration exits 0 but updates no rows (email capitalisation differs); the agent must catch it |
+
+Results are recorded in [`RESULTS.md`](RESULTS.md).
 
 The three cases that continue a session (`go-runs-one-step`, `question-is-not-confirmation`,
 `off-runs-to-end`) describe the earlier turns inside the prompt and use a scaffold script to
