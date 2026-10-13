@@ -1,8 +1,6 @@
-# checkpointed-execution
+# Checkpointed Execution
 
 ![checkpointed-execution: Success codes can lie. An agent skill that verifies each step's real effect, then stops for your go.](.github/cover.png)
-
-**Success codes can lie.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-6b4fbb.svg)](https://agentskills.io/specification)
