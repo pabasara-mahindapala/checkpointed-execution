@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 (2026-10-14)
+
+- Add `documentationUrl` (README) and `supportUrl` (GitHub issues) to `plugin.json`.
+
 ## 1.0.1 (2026-10-14)
 
 - Add a listing icon at `.claude-plugin/icon.png` for the Claude plugin directory.

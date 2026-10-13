@@ -1,9 +1,11 @@
 {
   "name": "checkpointed-execution",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Run multi-step work as reviewed checkpoints; stop for explicit confirmation after each step.",
   "author": { "name": "Pabasara Mahindapala", "url": "https://github.com/pabasara-mahindapala" },
   "repository": "https://github.com/pabasara-mahindapala/checkpointed-execution",
+  "documentationUrl": "https://github.com/pabasara-mahindapala/checkpointed-execution#readme",
+  "supportUrl": "https://github.com/pabasara-mahindapala/checkpointed-execution/issues",
   "license": "MIT",
   "keywords": ["checkpoint", "human-in-the-loop", "step-by-step", "runbook", "verification"]
 }
