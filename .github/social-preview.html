@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Source for social-preview.png (1280x640). Regenerate with:
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
+       --window-size=1280,640 --screenshot=.github/social-preview.png .github/social-preview.html -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{--bg:#101513;--panel:#18201d;--line:#2a3531;--fg:#e8efeb;--muted:#93a39b;--ok:#5cc8ad;--bad:#f07a6a;--stop:#f0a066}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1280px;height:640px;overflow:hidden;background:var(--bg);color:var(--fg)}
+  body{padding:64px 72px;display:grid;grid-template-columns:1fr 600px;gap:56px;align-items:center;font-family:"IBM Plex Sans",system-ui,sans-serif}
+  .name{font:500 22px "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.01em}
+  h1{font:700 76px/1.02 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.02em;margin-top:18px}
+  h1 span{color:var(--stop)}
+  .sub{font-size:23px;line-height:1.45;color:var(--muted);margin-top:26px;max-width:470px}
+  .install{margin-top:34px;white-space:nowrap;line-height:1.5;font:500 16px "IBM Plex Mono",monospace;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:inline-block}
+  .install b{color:var(--ok);font-weight:500}
+  .stack{display:grid;gap:18px}
+  .term{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 24px;font:400 17px/1.5 "IBM Plex Mono",monospace}
+  .lbl{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+  .bad .lbl{color:var(--bad)} .good .lbl{color:var(--ok)}
+  .dim{color:var(--muted)}
+  .x{color:var(--bad)} .k{color:var(--ok)} .s{color:var(--stop)}
+</style>
+</head>
+<body>
+  <div>
+    <div class="name">checkpointed-execution</div>
+    <h1>200 OK is<br><span>not done.</span></h1>
+    <p class="sub">An agent skill that verifies each step's real effect, then stops for your go.</p>
+    <div class="install"><b>$</b> npx skills add<br>&nbsp;&nbsp;pabasara-mahindapala/checkpointed-execution</div>
+  </div>
+  <div class="stack">
+    <div class="term bad">
+      <div class="lbl">Without the skill</div>
+      <div><span class="dim">$</span> ./bin/usersvc create alice</div>
+      <div class="dim">HTTP/1.1 201 Created</div>
+      <div><span class="x">✗</span> "I ran step 1 and created user alice."</div>
+    </div>
+    <div class="term good">
+      <div class="lbl">With the skill</div>
+      <div><span class="dim">$</span> ./bin/usersvc list <span class="dim">→ []</span></div>
+      <div><span class="k">✓</span> "create prints 201 Created, then exits</div>
+      <div>&nbsp;&nbsp;without writing anything."</div>
+      <div class="s">⏸ Checkpoint 0/3 · standard</div>
+    </div>
+  </div>
+</body>
+</html>

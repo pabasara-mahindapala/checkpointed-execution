@@ -10,6 +10,17 @@ then stops and waits for your go.
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-6b4fbb.svg)](https://agentskills.io/specification)
 [![npx skills](https://img.shields.io/badge/install-npx%20skills-black.svg)](https://skills.sh)
 
+![A toy user service: create returns 201 Created, but get returns 404 Not Found.](demo/service.gif)
+
+A toy user service: `create` returns `201 Created`, but `get` returns `404 Not Found`. It never actually stored the user.
+
+<table>
+  <tr>
+    <td width="50%"><img src="demo/without.gif" alt="Agent without the skill reports that it created alice, based on the 201 status code."></td>
+    <td width="50%"><img src="demo/with.gif" alt="Agent with checkpointed-execution finds in preflight that create stores nothing, runs no steps, and stops at Checkpoint 0/3."></td>
+  </tr>
+</table>
+
 ## The problem, in one run
 
 A user service. Its `create` command prints `201 Created` and exits 0, but never stores
