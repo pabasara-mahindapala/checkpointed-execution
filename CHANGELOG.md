@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 (2026-10-14)
+
+- Add a listing icon at `.claude-plugin/icon.png` for the Claude plugin directory.
+- Remove the demo tape scripts; the rendered GIFs stay in `demo/`.
+- Eval static-site cases use `base_url = "/"` instead of an example URL.
+
 ## 1.0.0 (2026-10-14)
 
 First public release.
