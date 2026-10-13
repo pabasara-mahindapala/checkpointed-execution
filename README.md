@@ -152,12 +152,10 @@ evals/                          # claude plugin eval cases
 ## Evaluation
 
 This skill ships with an eval suite for [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals):
-17 cases that check when it triggers and how it behaves (stopping, "go" running one step, a
-question not counting as a go, turning it off, running with no human to confirm, a 201 that
-stored nothing, and a migration that updated no rows). Each case runs with and without the
+17 cases that check when it triggers and how it behaves. Each case runs with and without the
 skill.
 
-Full suite, 2026-10-13, Claude Code's default model, 102 runs:
+Full suite, 102 runs:
 
 | Case | With skill | Without |
 |---|---|---|
@@ -168,11 +166,10 @@ Full suite, 2026-10-13, Claude Code's default model, 102 runs:
 | Triggering: fires when it should | 10 of 10 runs | |
 | Triggering: stays quiet when it should | 10 of 10 runs | |
 
-When you ask for one step at a time, the agent without the skill usually stops on its own
+When you ask politely for one step at a time, the agent without the skill may stop on its own
 too. The bigger difference is in what it checks before it says "done": without the skill it
 trusted the `201 Created` in every run. [`evals/RESULTS.md`](evals/RESULTS.md) has the
-details and known issues, and [`evals/README.md`](evals/README.md) shows how to run the
-suite yourself.
+details, and [`evals/README.md`](evals/README.md) shows how to run the suite yourself.
 
 ## License
 

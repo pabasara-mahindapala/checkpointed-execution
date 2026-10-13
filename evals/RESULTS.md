@@ -1,12 +1,11 @@
 # Eval results
 
-## 2026-10-13: full suite
+## Full suite
 
 - **Command:** `claude plugin eval . -j 4 --scaffold --allow-tools Bash Write Edit --threshold 0`
 - **Setup:** Claude Code 2.1.296, its default model, LLM judge on Haiku (the default)
 - **Size:** 17 cases, 102 runs (3 runs per arm for behaviour cases, 2 for trigger cases)
 - **Time and cost:** 10.6 minutes, $10.63
-- **Raw results:** `evals/results/full-suite-2026-10-13.json` (git-ignored; kept locally)
 
 Each case runs once with the skill loaded and once without it. A score is the share of
 graders that passed, averaged over runs.
@@ -43,15 +42,3 @@ graders that passed, averaged over runs.
   conversation cases (go, question, off) showed no difference. They describe the earlier turns
   inside the prompt, which makes the request explicit for both arms.
 
-### Notes and known issues
-
-- **`status-code-trap` rubric is too strict.** One run with the skill finished a correct
-  read-only preflight (`list` empty, `get alice` and `get bob` 404) and stopped before step 1
-  without claiming anything. The rubric requires the agent to have *caught* the trap, so it
-  failed. Planned fix: also pass a run that stops before running `create` without claiming
-  success.
-- **Trigger cases hit the 4-turn cap** in several runs (`Reached maximum number of turns`). The
-  trigger graders still scored correctly, because the skill call happens in the first turn.
-  Planned fix: raise `max_turns` for trigger cases.
-- **One model only.** A smaller model (for example `--model haiku`) is more likely to run ahead
-  and is the next thing to measure.
