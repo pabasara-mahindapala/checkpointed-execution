@@ -10,7 +10,7 @@ description: >
   migrations, integrations, proof-of-concepts, and runbooks others will follow. Not for
   single edits, focused bug fixes, read-only investigation, or explaining a concept step
   by step.
-argument-hint: "[on|off|status]"
+argument-hint: "[lite|standard|strict|hands-on|off|status]"
 ---
 
 # Checkpointed execution
@@ -40,12 +40,13 @@ Applying this model to trivial work is itself a failure mode.
 
 ## Turning it on and off
 
-- **On:** the user invokes the skill (`/checkpointed-execution` or `on`) or asks for
-  step-by-step, stop-and-review work in their own words. When you start it on your own
-  judgement, say so in one line, so the user can turn it off.
+- **On:** the user invokes the skill (`/checkpointed-execution`, optionally with a mode) or
+  asks for step-by-step, stop-and-review work in their own words. When you start it on your
+  own judgement, say so in one line, so the user can turn it off.
 - **Off:** "off", "stop checkpoints", "run to the end", "just do the rest". Confirm in one
   line, then continue without stops. Verification and honest reporting still apply.
-- **Status:** `status` — reply with whether it is on, the current step, and what is pending.
+- **Status:** `status` — reply with whether it is on, the mode, the current step, and what
+  is pending.
 - **Batch approval:** "do 3 to 5, then stop" approves exactly those steps. Stop after the
   last one in the batch.
 - **Persistence:** once on, it stays on for the rest of the task until the user turns it off.
@@ -53,7 +54,22 @@ Applying this model to trivial work is itself a failure mode.
 
 End every stop with a status line, so the state is visible without asking:
 
-> ⏸ Checkpoint 3/7 — next: export the source records. Reply **go** to continue.
+> ⏸ Checkpoint 3/7 · standard — next: export the source records. Reply **go** to continue.
+
+## Modes
+
+Modes change where you stop and who acts. Nothing else in this file is relaxed by them.
+
+| Mode | Stops | Use for |
+|---|---|---|
+| `lite` | at phase boundaries | familiar work, cheap-to-redo steps |
+| `standard` (default) | after every step | cumulative state, expensive mistakes |
+| `strict` | after every step, and before every `[ME]` write | production, shared or customer systems |
+| `hands-on` | after every step; the user performs state changes | learning, handing over operation |
+
+In every mode, stop at once on a failure, a surprise, your own mistake, or before anything
+irreversible or outside scope. Read `references/modes.md` when the user picks a mode other
+than standard.
 
 ## What counts as confirmation
 
@@ -107,9 +123,10 @@ These are not suggestions. Violating them defeats the model.
    when you caused them, including when the news is bad. Then say what you are doing about
    it. Never quietly work around a failure and present a clean summary.
 
-6. **Write any records/documents as you go**, never at the end. Each step appends what was done, the
-   exact commands, the observed result, and anything surprising. A document reconstructed
-   from memory at the end loses precisely the details that made it worth writing.
+6. **Write any records/documents as you go**, never at the end. Each step appends what was
+   done, the exact commands, the observed result, and anything surprising
+   (`assets/runbook-template.md` has the shape). A document reconstructed from memory at
+   the end loses precisely the details that made it worth writing.
 
 7. **Mark ownership for every step.** Use `[ME]` for actions you perform and `[YOU]` for
    actions the user performs. Never silently do a `[YOU]` step yourself.
@@ -141,6 +158,25 @@ Before executing, produce a plan containing:
 State the stop-and-confirm rule *inside* the plan, not only in conversation. The plan is what
 survives; a promise made in chat does not.
 
+`assets/plan-template.md` has this shape, with a status column for each step. When the work
+spans more than a few steps or may outlive the session, save the plan and the runbook as
+files: propose paths in the plan (default `checkpoints/<task>/plan.md` and
+`checkpoints/<task>/runbook.md` in the working directory) and use whatever the user
+prefers. Update the step's status in the plan file as soon as the step finishes, before
+reporting it.
+
+## Resuming
+
+When you pick up checkpointed work in a new session, after the context was compacted, or
+after a long pause:
+
+1. Read the plan file and find the last step marked `done`.
+2. Re-run the preflight checks (read-only) and the verification of the last completed step.
+   State may have changed since; a step marked `done` is a claim, not evidence.
+3. Report what you found, including any drift from what the plan records, then stop.
+
+Do not continue to the next step until the user confirms, even if everything matches.
+
 ## Step anatomy
 
 Every step has four parts:
@@ -156,7 +192,8 @@ they cost anything.
 
 ## Reporting a completed step
 
-Report in this shape, and keep it short enough to actually be read:
+Report in this shape (`assets/step-report-template.md`), and keep it short enough to
+actually be read:
 
 - **What was done** — briefly.
 - **What was verified, and how** — the evidence, not the claim. Show the query result, the
