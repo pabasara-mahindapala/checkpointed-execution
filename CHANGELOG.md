@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3 (2026-10-15)
+
+- The description also triggers on requests to be guided through setting something up, and on
+  multi-step build, setup, migration and integration work.
+- Stopping after each step now applies explicitly when nobody can reply (subagent, headless or
+  scheduled runs): finish the current step, verify it, and return the step report.
+- Eval results for the default model, Sonnet 5.5 and Haiku in `evals/RESULTS.md` and the README.
+
 ## 1.0.2 (2026-10-14)
 
 - Add `documentationUrl` (README) and `supportUrl` (GitHub issues) to `plugin.json`.

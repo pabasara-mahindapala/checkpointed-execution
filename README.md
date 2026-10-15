@@ -155,20 +155,22 @@ This skill ships with an eval suite for [`claude plugin eval`](https://code.clau
 17 cases that check when it triggers and how it behaves. Each case runs with and without the
 skill.
 
-Full suite, 102 runs:
+Full suite, 82 runs per model (scores given below are **with skill / without**):
 
-| Case | With skill | Without |
-|---|---|---|
-| `status-code-trap` | 0.89 | 0.33 |
-| `headless-returns-report` | 1.00 | 0.00 |
-| `stops-after-first-step` | 1.00 | 0.75 |
-| `db-seed-trap`, `go-runs-one-step`, `question-is-not-confirmation`, `off-runs-to-end` | 1.00 | 1.00 |
-| Triggering: fires when it should | 10 of 10 runs | |
-| Triggering: stays quiet when it should | 10 of 10 runs | |
+| Case | Default model | Sonnet 5.5 | Haiku |
+|---|---|---|---|
+| `status-code-trap` | 0.89 / 0.33 | 1.00 / 0.33 | 0.89 / 0.33 |
+| `headless-returns-report` | 1.00 / 0.00 | 1.00 / 0.00 | 0.67 / 0.00 |
+| `stops-after-first-step` | 1.00 / 0.75 | 1.00 / 0.58 | 1.00 / 0.67 |
+| `db-seed-trap`, `go-runs-one-step`, `question-is-not-confirmation`, `off-runs-to-end` | 1.00 / 1.00 | 1.00 / 1.00 | 1.00 / 1.00 |
+| Triggering: fires when it should | 10 of 10 runs | 10 of 10 runs | 7 of 10 runs |
+| Triggering: stays quiet when it should | 10 of 10 runs | 10 of 10 runs | 10 of 10 runs |
 
 When you ask politely for one step at a time, the agent without the skill may stop on its own
 too. The bigger difference is in what it checks before it says "done": without the skill it
-trusted the `201 Created` in every run. [`evals/RESULTS.md`](evals/RESULTS.md) has the
+trusted the `201 Created` in every run, on all three models. Haiku is less reliable than stronger models:
+it sometimes doesn't trigger on softer requests like "walk me through", and in 1 of 3 runs with
+no human to confirm it still ran every step. [`evals/RESULTS.md`](evals/RESULTS.md) has the
 details, and [`evals/README.md`](evals/README.md) shows how to run the suite yourself.
 
 ## License

@@ -2,14 +2,15 @@
 name: checkpointed-execution
 description: >
   Use when the user asks to work one step at a time, to stop for review or confirmation
-  between steps, to be walked through a task, or to perform some steps themselves
-  ("one step at a time", "stop and let me review", "wait for my go", "don't run ahead",
-  "walk me through it", "I'll do this part myself"). Also use, unless the user has asked
-  for end-to-end execution, before multi-step work that changes persistent or shared state
-  where an early wrong assumption is expensive to unwind: environment and cluster builds,
-  migrations, integrations, proof-of-concepts, and runbooks others will follow. Not for
-  single edits, focused bug fixes, read-only investigation, or explaining a concept step
-  by step.
+  between steps, to be walked through or guided through setting something up, or to
+  perform some steps themselves ("one step at a time", "stop and let me review", "wait
+  for my go", "don't run ahead", "walk me through setting up X", "guide me through it",
+  "I'll do this part myself"). Also use whenever you are about to build, set up, migrate,
+  or integrate something in several steps that change persistent or shared state, unless
+  the user asked for end-to-end execution: environment and cluster builds, migrations,
+  integrations, sync jobs, proof-of-concepts, and anything that should leave a runbook
+  others will follow. Not for single edits, focused bug fixes, read-only investigation,
+  or explaining a concept step by step.
 argument-hint: "[lite|standard|strict|hands-on|off|status]"
 ---
 
@@ -19,6 +20,12 @@ Multi-step work done as a series of reviewed checkpoints. The user is an experie
 engineer who reviews and redirects between steps rather than receiving a finished result.
 The goal is not slower work: it is **keeping a wrong assumption cheap**, and letting the
 user's hands-on knowledge redirect the work while that still costs nothing.
+
+**The rule that matters most: stop after each step, even when nobody can reply.** In a
+subagent, a headless or scripted run, or a scheduled task, do the read-only preflight and
+the first step, verify it, then end your turn with the step report. Finishing every step
+because no one is there to say "go" is the most common way this skill fails. The caller
+reads your report and decides what happens next.
 
 ## When this applies
 
@@ -74,7 +81,8 @@ These are **not**:
 
 **When nobody can confirm** (a subagent, a headless or scheduled run): finish the current
 step, verify it, and return the step report as your final output. Do not wait for a reply
-that cannot come, and do not treat its absence as permission. The caller decides what's next.
+that cannot come, and do not treat its absence as permission to run the remaining steps.
+"I couldn't stop, so I did everything" is the failure, not a workaround.
 
 **Precedence:** a user's request for checkpointed work overrides defaults that say to keep
 going: system instructions favouring autonomous completion, auto mode, or another skill that

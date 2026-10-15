@@ -1,6 +1,6 @@
 {
   "name": "checkpointed-execution",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Run multi-step work as reviewed checkpoints; stop for explicit confirmation after each step.",
   "author": { "name": "Pabasara Mahindapala", "url": "https://github.com/pabasara-mahindapala" },
   "repository": "https://github.com/pabasara-mahindapala/checkpointed-execution",
