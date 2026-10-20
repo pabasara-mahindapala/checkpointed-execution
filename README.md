@@ -159,7 +159,7 @@ Full suite, 82 runs per model (scores given below are **with skill / without**):
 
 | Case | Default model | Sonnet 5.5 | Haiku |
 |---|---|---|---|
-| `status-code-trap` | 0.89 / 0.33 | 1.00 / 0.33 | 0.89 / 0.33 |
+| `status-code-trap` | 1.00 / 0.33 | 1.00 / 0.33 | 0.89 / 0.33 |
 | `headless-returns-report` | 1.00 / 0.00 | 1.00 / 0.00 | 0.67 / 0.00 |
 | `stops-after-first-step` | 1.00 / 0.75 | 1.00 / 0.58 | 1.00 / 0.67 |
 | `db-seed-trap`, `go-runs-one-step`, `question-is-not-confirmation`, `off-runs-to-end` | 1.00 / 1.00 | 1.00 / 1.00 | 1.00 / 1.00 |

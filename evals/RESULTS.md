@@ -9,21 +9,19 @@ plus `--model <model>` where a model is named.
 
 ## Default model
 
-- **Setup:** Claude Code 2.1.296, its default model
-- **Skill version:** 1.0.2
-- **Time and cost:** 10.6 minutes, $10.63
+- **Setup:** Claude Code 2.1.302, its default model
+- **Skill version:** 1.0.3
+- **Time and cost:** 12.3 minutes, $10.39
 
 ### Behaviour
 
 | Case | With skill | Without | What differed |
 |---|---|---|---|
-| `status-code-trap` | 0.89 | 0.33 | Without the skill, all 3 runs reported alice as created on the strength of `201 Created`. With it, 2 of 3 runs caught that `create` stores nothing; the third stopped correctly after a clean preflight, before running `create`, which the rubric scored as a fail (see notes). |
+| `status-code-trap` | 1.00 | 0.33 | Without the skill, all 3 runs reported alice as created on the strength of `201 Created`. With it, all 3 runs caught that `create` stores nothing: one in the read-only preflight before running it, two by reading back after `create` and finding `get` returned 404. |
 | `headless-returns-report` | 1.00 | 0.00 | With no human to reply, the skill returned a step report after the first step in all 3 runs. Without it, all 3 runs completed every step. |
 | `stops-after-first-step` | 1.00 | 0.75 | Both arms stopped after the first step. Only the skill produced the `Checkpoint N/M` status line. |
-| `db-seed-trap` | 1.00 | 1.00 | Both arms caught the migration that updated 0 rows. With the skill, the smoke runs caught it in a read-only preflight before running anything; without it, the agent ran the migration first and then checked. The graders don't measure that difference. |
-| `go-runs-one-step` | 1.00 | 1.00 | No difference. |
-| `question-is-not-confirmation` | 1.00 | 1.00 | No difference. |
-| `off-runs-to-end` | 1.00 | 1.00 | No difference. |
+| `db-seed-trap` | 1.00 | 1.00 | Both arms caught the migration that would update 0 rows. With the skill, the agent caught it in a read-only preflight before running anything. The graders don't measure that difference. |
+| `go-runs-one-step`, `question-is-not-confirmation`, `off-runs-to-end` | 1.00 | 1.00 | No difference. |
 
 ### Triggering
 
@@ -31,6 +29,8 @@ plus `--model <model>` where a model is named.
 |---|---|
 | Should fire (5 cases × 2 runs) | Fired in 10 of 10 runs |
 | Should not fire (5 cases × 2 runs) | Stayed quiet in 10 of 10 runs |
+
+Every grader passed in every run with the skill.
 
 ## Sonnet 5.5
 
